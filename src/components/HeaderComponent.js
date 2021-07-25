@@ -27,8 +27,8 @@ class Header extends Component {
   render() {
     return (
       <div>
-        <Navbar color="dark" dark expand="md">
-          <NavbarBrand href="/bookstore">
+        <Navbar color="dark" dark expand="sm">
+          <NavbarBrand href="/bookstore" className="ms-3">
             La bibliothèque d'Henri Potier
           </NavbarBrand>
           <NavbarToggler onClick={this.toggle} />

@@ -1,0 +1,15 @@
+.container {
+  max-width: 100vw;
+}
+
+@media (min-width: 280px) {
+  .card-group {
+    display: flex;
+    flex-flow: row wrap;
+    justify-content: center;
+  }
+
+  .card-group > .card {
+    flex: 0 0 auto;
+  }
+}
