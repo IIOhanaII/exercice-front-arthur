@@ -2,6 +2,15 @@ import React, { Component } from "react";
 import Main from "./components/MainComponent";
 import "./App.css";
 import { BrowserRouter } from "react-router-dom";
+import { library } from "@fortawesome/fontawesome-svg-core";
+import { fas } from "@fortawesome/free-solid-svg-icons";
+import {
+  faInfo,
+  faCartPlus,
+  faTrashAlt,
+} from "@fortawesome/free-solid-svg-icons";
+
+library.add(fas, faInfo, faCartPlus, faTrashAlt);
 
 class App extends Component {
   render() {

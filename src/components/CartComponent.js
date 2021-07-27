@@ -2,42 +2,77 @@ import React, { useState, useEffect } from "react";
 import { Button } from "reactstrap";
 import { useSelector, useDispatch } from "react-redux";
 import { selectCart, deleteBookFromCart } from "../features/cart/cartSlice";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 
 const Cart = () => {
   const dispatch = useDispatch();
   const cart = useSelector(selectCart);
 
-  const [offerUrlParameter, setofferUrlParameter] = useState(
-    cart.map((book) => book.isbn).join(",")
-  );
   const [error, setError] = useState(false);
-  const [isOfferLoaded, setIsOfferLoaded] = useState(false);
-  const [offer, setOffer] = useState({});
+  const [isBestOfferLoaded, setIsBestOfferLoaded] = useState(false);
+  const [bestOffer, setBestOffer] = useState(null);
+  const [cartTotalValue, setCartTotalValue] = useState(null);
+  const [discountedCartTotalValue, setDiscountedCartTotalValue] =
+    useState(null);
 
-  const loadOffer = () => {
-    console.log(offerUrlParameter);
+  const loadBestOffer = () => {
+    // Chain each book isbn
+    const offersUrlParameter = cart.map((book) => book.isbn).join(",");
+    console.log(offersUrlParameter);
     fetch(
       "https://henri-potier.techx.fr/books/" +
-        offerUrlParameter +
+        offersUrlParameter +
         "/commercialOffers"
     )
       .then((res) => res.json())
       .then(
         (result) => {
-          setIsOfferLoaded(true);
-          setOffer(result);
+          console.log(result);
+          const highestValueFromOffers = Math.max.apply(
+            Math,
+            result.offers.map((offer) => offer.value)
+          );
+          setBestOffer(highestValueFromOffers);
+          setIsBestOfferLoaded(true);
         },
         (error) => {
-          setIsOfferLoaded(true);
+          setIsBestOfferLoaded(true);
           setError(true);
         }
       );
   };
 
+  const computeCartTotalValue = () => {
+    const cartTotalValueResult = cart
+      .map((book) => book.price)
+      .reduce((a, b) => a + b, 0);
+    setCartTotalValue(cartTotalValueResult);
+  };
+
+  const computeDiscountedCartTotalValue = () => {
+    const discountedCartTotalValueResult = cartTotalValue - bestOffer;
+    setDiscountedCartTotalValue(discountedCartTotalValueResult);
+  };
+
+  const handleOnDelete = (book) => {
+    dispatch(deleteBookFromCart(book));
+
+    // Compute the new discounted cart total value
+    if (cart.length >= 2) {
+      loadBestOffer();
+      computeCartTotalValue();
+      computeDiscountedCartTotalValue();
+    }
+  };
+
   useEffect(() => {
-    // Get the offer on books added to the cart as soon as everything else have been loaded
-    if (cart.length !== 0) loadOffer();
-  }, []);
+    // Compute the discounted cart total value as soon as everything else have been loaded
+    if (cart.length !== 0) {
+      loadBestOffer();
+      computeCartTotalValue();
+      computeDiscountedCartTotalValue();
+    }
+  });
 
   if (cart.length === 0) {
     return <div>Votre panier est actuellement vide</div>;
@@ -48,7 +83,7 @@ const Cart = () => {
         vous plaît rafraîchir la page ou revenir plus tard
       </div>
     );
-  } else if (!isOfferLoaded) {
+  } else if (!isBestOfferLoaded) {
     return <div>Chargement…</div>;
   } else {
     return (
@@ -81,18 +116,22 @@ const Cart = () => {
               <h5 className="text-success">En stock</h5>
               <div>
                 <Button
-                  color="link"
+                  color="danger"
                   size="sm"
-                  style={{ fontSize: "1rem" }}
-                  className="ps-0"
-                  onClick={() => dispatch(deleteBookFromCart(book))}
+                  onClick={() => handleOnDelete(book)}
                 >
-                  Supprimer
+                  <FontAwesomeIcon icon={["fas", "trash-alt"]} size="lg" />
                 </Button>
               </div>
             </div>
           </div>
         ))}
+        <div>Coût total de votre panier: {cartTotalValue}€</div>
+        <div>Avec notre meilleure offre commerciale de {bestOffer}€</div>
+        <div>
+          Le coût total de votre panier est désormais de{" "}
+          {discountedCartTotalValue}€
+        </div>
       </div>
     );
   }

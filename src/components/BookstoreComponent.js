@@ -11,12 +11,14 @@ import {
 import { useDispatch } from "react-redux";
 import { addBookToCart } from "../features/cart/cartSlice";
 import { ReactSearchAutocomplete } from "react-search-autocomplete";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 
 const Bookstore = () => {
   const dispatch = useDispatch();
   const [error, setError] = useState(false);
   const [areBooksLoaded, setAreBooksLoaded] = useState(false);
   const [books, setBooks] = useState([]);
+  const [filteredBooks, setFilteredBooks] = useState([]);
 
   const loadBooks = () => {
     fetch("https://henri-potier.techx.fr/books")
@@ -31,6 +33,7 @@ const Bookstore = () => {
             id: book.isbn,
           }));
           setBooks(resultWithIds);
+          setFilteredBooks(resultWithIds);
         },
         (error) => {
           setAreBooksLoaded(true);
@@ -40,20 +43,32 @@ const Bookstore = () => {
   };
 
   const handleOnSearch = (string, results) => {
-    // onSearch will have as the first callback parameter
-    // the string searched and for the second the results.
-    console.log(string, results);
+    if (results.length === 0) {
+      setFilteredBooks(books);
+    }
+    else {
+      setFilteredBooks(results);
+    }
   };
 
-  const handleOnSelect = (item) => {
-    // the item selected
-    console.log(item);
-    setBooks(books.filter((book) => book.isbn === item.isbn));
+  const handleOnHover = (book) => {
+    setFilteredBooks([book]);
   };
 
+  const handleOnSelect = (book) => {
+    setFilteredBooks([book]);
+  };
+
+  // Allows to display all the books when the user clears the input box by clicking on the clear icon
   const handleOnClear = () => {
-    loadBooks();
+    setFilteredBooks(books);
   };
+
+  // Allows to display all the books when the user clears the input box by erasing the search string and clicking outside the input box
+  const handleOnBlur = (event) => {          
+    let input = document.getElementsByTagName('input')[0];
+    if (!event.currentTarget.contains(event.relatedTarget) && input.value === '') setFilteredBooks(books);
+  }
 
   useEffect(() => {
     // Get the books data as soon as everything else have been loaded
@@ -75,22 +90,25 @@ const Bookstore = () => {
         <div
           style={{ width: 400, marginLeft: "auto", marginRight: "auto" }}
           className="mt-4"
+          onBlur={(event) => handleOnBlur(event)}
         >
           <ReactSearchAutocomplete
             items={books}
             onSearch={handleOnSearch}
-            onClear={handleOnClear}
+            onHover={handleOnHover}
             onSelect={handleOnSelect}
+            onClear={handleOnClear}
             autoFocus
             fuseOptions={{
-              keys: ["title", "synopsis"],
+              keys: ["title", "isbn"],
             }}
             resultStringKeyName="title"
+            placeholder="Titre, isbn"
             styling={{ zIndex: "10000" }}
           />
         </div>
         <CardGroup className="mt-4">
-          {books.map((book) => (
+          {filteredBooks.map((book) => (
             <Card
               key={book.isbn}
               style={{ width: "17rem" }}
@@ -104,16 +122,16 @@ const Bookstore = () => {
               <CardBody className="px-0 pb-4">
                 <CardTitle tag="h5">{book.title} </CardTitle>
                 <CardSubtitle tag="h6">{book.price}€</CardSubtitle>
-                <div className="d-flex justify-content-evenly mt-2">
-                  <Button color="primary" size="sm">
-                    En savoir plus
+                <div className="d-flex justify-content-start mt-2">
+                  <Button color="primary" size="sm" className="me-2">
+                    <FontAwesomeIcon icon={["fas", "info"]} size="lg" />
                   </Button>
                   <Button
-                    color="secondary"
+                    color="success"
                     size="sm"
                     onClick={() => dispatch(addBookToCart(book))}
                   >
-                    Ajouter au panier
+                    <FontAwesomeIcon icon={["fas", "cart-plus"]} size="lg" />
                   </Button>
                 </div>
               </CardBody>

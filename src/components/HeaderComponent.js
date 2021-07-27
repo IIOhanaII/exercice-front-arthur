@@ -1,4 +1,4 @@
-import React, { Component } from "react";
+import React, { useState } from "react";
 import {
   Navbar,
   NavbarBrand,
@@ -8,48 +8,41 @@ import {
   NavItem,
 } from "reactstrap";
 import { NavLink } from "react-router-dom";
+import { useSelector } from "react-redux";
+import { selectCart } from "../features/cart/cartSlice";
 
-class Header extends Component {
-  constructor(props) {
-    super(props);
+const Header = () => {
+  const cart = useSelector(selectCart);
 
-    this.state = {
-      isOpen: false,
-    };
+  const [isOpen, setIsOpen] = useState(false);
 
-    this.toggle = this.toggle.bind(this);
-  }
-
-  toggle() {
-    this.setState({ isOpen: !this.state.isOpen });
-  }
-
-  render() {
-    return (
-      <div>
-        <Navbar color="dark" dark expand="sm">
-          <NavbarBrand href="/bookstore" className="ms-3">
-            La bibliothèque d'Henri Potier
-          </NavbarBrand>
-          <NavbarToggler onClick={this.toggle} />
-          <Collapse isOpen={this.state.isOpen} navbar>
-            <Nav navbar>
-              <NavItem>
-                <NavLink className="nav-link" to="/bookstore">
-                  Livres
-                </NavLink>
-              </NavItem>
-              <NavItem>
-                <NavLink className="nav-link" to="/cart">
-                  Panier
-                </NavLink>
-              </NavItem>
-            </Nav>
-          </Collapse>
-        </Navbar>
-      </div>
-    );
-  }
-}
+  const toggle = () => {
+    setIsOpen(!isOpen);
+  };
+  return (
+    <div>
+      <Navbar color="dark" dark expand="sm">
+        <NavbarBrand href="/bookstore" className="ms-3">
+          La bibliothèque d'Henri Potier
+        </NavbarBrand>
+        <NavbarToggler onClick={toggle} />
+        <Collapse isOpen={isOpen} navbar>
+          <Nav navbar>
+            <NavItem>
+              <NavLink className="nav-link" to="/bookstore">
+                Livres
+              </NavLink>
+            </NavItem>
+            <NavItem>
+              <NavLink className="nav-link" to="/cart">
+                Panier ({cart.length})
+              </NavLink>
+            </NavItem>
+          </Nav>
+        </Collapse>
+      </Navbar>
+    </div>
+  );
+};
 
 export default Header;
