@@ -12,6 +12,8 @@ import { useDispatch } from "react-redux";
 import { addBookToCart } from "../features/cart/cartSlice";
 import { ReactSearchAutocomplete } from "react-search-autocomplete";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { DesktopModal } from "./DesktopModalComponent";
+import { MobileModal } from "./MobileModalComponent";
 
 const Bookstore = () => {
   const dispatch = useDispatch();
@@ -19,6 +21,8 @@ const Bookstore = () => {
   const [areBooksLoaded, setAreBooksLoaded] = useState(false);
   const [books, setBooks] = useState([]);
   const [filteredBooks, setFilteredBooks] = useState([]);
+  const [modal, setModal] = useState(false);
+  const [modalBook, setModalBook] = useState({});
 
   const loadBooks = () => {
     fetch("https://henri-potier.techx.fr/books")
@@ -45,8 +49,7 @@ const Bookstore = () => {
   const handleOnSearch = (string, results) => {
     if (results.length === 0) {
       setFilteredBooks(books);
-    }
-    else {
+    } else {
       setFilteredBooks(results);
     }
   };
@@ -65,10 +68,19 @@ const Bookstore = () => {
   };
 
   // Allows to display all the books when the user clears the input box by erasing the search string and clicking outside the input box
-  const handleOnBlur = (event) => {          
-    let input = document.getElementsByTagName('input')[0];
-    if (!event.currentTarget.contains(event.relatedTarget) && input.value === '') setFilteredBooks(books);
-  }
+  const handleOnBlur = (event) => {
+    let input = document.getElementsByTagName("input")[0];
+    if (
+      !event.currentTarget.contains(event.relatedTarget) &&
+      input.value === ""
+    )
+      setFilteredBooks(books);
+  };
+  // , cover, title, price, synopsis
+  const toggleModal = (book) => {
+    setModal(!modal);
+    setModalBook(book);
+  };
 
   useEffect(() => {
     // Get the books data as soon as everything else have been loaded
@@ -88,8 +100,8 @@ const Bookstore = () => {
     return (
       <div className="container">
         <div
-          style={{ width: 400, marginLeft: "auto", marginRight: "auto" }}
-          className="mt-4"
+          style={{ marginLeft: "auto", marginRight: "auto" }}
+          className="mt-4 searchbox-sizing"
           onBlur={(event) => handleOnBlur(event)}
         >
           <ReactSearchAutocomplete
@@ -104,7 +116,7 @@ const Bookstore = () => {
             }}
             resultStringKeyName="title"
             placeholder="Titre, isbn"
-            styling={{ zIndex: "10000" }}
+            styling={{ zIndex: "1000" }}
           />
         </div>
         <CardGroup className="mt-4">
@@ -123,9 +135,30 @@ const Bookstore = () => {
                 <CardTitle tag="h5">{book.title} </CardTitle>
                 <CardSubtitle tag="h6">{book.price}€</CardSubtitle>
                 <div className="d-flex justify-content-start mt-2">
-                  <Button color="primary" size="sm" className="me-2">
+                  <Button
+                    color="primary"
+                    size="sm"
+                    className="me-2"
+                    onClick={(e) => toggleModal(book)}
+                  >
                     <FontAwesomeIcon icon={["fas", "info"]} size="lg" />
                   </Button>
+                  {/* Render this modal on Desktop */}
+                  {window.screen.width > 1024 && (
+                    <DesktopModal
+                      isModalOpen={modal}
+                      toggle={toggleModal}
+                      modalBook={modalBook}
+                    />
+                  )}
+                  {/* Render this modal on Mobile devices */}
+                  {window.screen.width <= 1024 && (
+                    <MobileModal
+                      isModalOpen={modal}
+                      toggle={toggleModal}
+                      modalBook={modalBook}
+                    />
+                  )}
                   <Button
                     color="success"
                     size="sm"

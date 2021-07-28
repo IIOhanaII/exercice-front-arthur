@@ -8,9 +8,10 @@ import {
   faInfo,
   faCartPlus,
   faTrashAlt,
+  faTimes,
 } from "@fortawesome/free-solid-svg-icons";
 
-library.add(fas, faInfo, faCartPlus, faTrashAlt);
+library.add(fas, faInfo, faCartPlus, faTrashAlt, faTimes);
 
 class App extends Component {
   render() {
