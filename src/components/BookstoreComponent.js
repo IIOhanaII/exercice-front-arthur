@@ -14,6 +14,8 @@ import { ReactSearchAutocomplete } from "react-search-autocomplete";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { DesktopModal } from "./DesktopModalComponent";
 import { MobileModal } from "./MobileModalComponent";
+import { Fade } from "react-animation-components";
+import { v4 as uuidv4 } from "uuid";
 
 const Bookstore = () => {
   const dispatch = useDispatch();
@@ -76,7 +78,7 @@ const Bookstore = () => {
     )
       setFilteredBooks(books);
   };
-  // , cover, title, price, synopsis
+
   const toggleModal = (book) => {
     setModal(!modal);
     setModalBook(book);
@@ -99,76 +101,76 @@ const Bookstore = () => {
   } else {
     return (
       <div className="container">
-        <div
-          style={{ marginLeft: "auto", marginRight: "auto" }}
-          className="mt-4 searchbox-sizing"
-          onBlur={(event) => handleOnBlur(event)}
-        >
-          <ReactSearchAutocomplete
-            items={books}
-            onSearch={handleOnSearch}
-            onHover={handleOnHover}
-            onSelect={handleOnSelect}
-            onClear={handleOnClear}
-            autoFocus
-            fuseOptions={{
-              keys: ["title", "isbn"],
-            }}
-            resultStringKeyName="title"
-            placeholder="Titre, isbn"
-            styling={{ zIndex: "1000" }}
-          />
-        </div>
+        <Fade in duration={500} timingFn="ease-in-out">
+          <div
+            style={{ marginLeft: "auto", marginRight: "auto" }}
+            className="mt-4 searchbox-sizing"
+            onBlur={(event) => handleOnBlur(event)}
+          >
+            <ReactSearchAutocomplete
+              items={books}
+              onSearch={handleOnSearch}
+              onHover={handleOnHover}
+              onSelect={handleOnSelect}
+              onClear={handleOnClear}
+              autoFocus
+              fuseOptions={{
+                keys: ["title", "isbn"],
+              }}
+              resultStringKeyName="title"
+              placeholder="Titre, isbn"
+              styling={{ zIndex: "1000" }}
+            />
+          </div>
+        </Fade>
         <CardGroup className="mt-4">
           {filteredBooks.map((book) => (
-            <Card
-              key={book.isbn}
-              style={{ width: "17rem" }}
-              className="border-0 me-sm-4"
-            >
-              <CardImg
-                src={book.cover}
-                alt={`Couverture du livre intitulé ${book.title}`}
-                style={{ height: "25rem" }}
-              />
-              <CardBody className="px-0 pb-4">
-                <CardTitle tag="h5">{book.title} </CardTitle>
-                <CardSubtitle tag="h6">{book.price}€</CardSubtitle>
-                <div className="d-flex justify-content-start mt-2">
-                  <Button
-                    color="primary"
-                    size="sm"
-                    className="me-2"
-                    onClick={(e) => toggleModal(book)}
-                  >
-                    <FontAwesomeIcon icon={["fas", "info"]} size="lg" />
-                  </Button>
-                  {/* Render this modal on Desktop */}
-                  {window.screen.width > 1024 && (
-                    <DesktopModal
-                      isModalOpen={modal}
-                      toggle={toggleModal}
-                      modalBook={modalBook}
-                    />
-                  )}
-                  {/* Render this modal on Mobile devices */}
-                  {window.screen.width <= 1024 && (
-                    <MobileModal
-                      isModalOpen={modal}
-                      toggle={toggleModal}
-                      modalBook={modalBook}
-                    />
-                  )}
-                  <Button
-                    color="success"
-                    size="sm"
-                    onClick={() => dispatch(addBookToCart(book))}
-                  >
-                    <FontAwesomeIcon icon={["fas", "cart-plus"]} size="lg" />
-                  </Button>
-                </div>
-              </CardBody>
-            </Card>
+            <Fade in duration={1000} timingFn="ease-in-out" key={uuidv4()}>
+              <Card style={{ width: "17rem" }} className="border-0 me-sm-4">
+                <CardImg
+                  src={book.cover}
+                  alt={`Couverture du livre intitulé ${book.title}`}
+                  style={{ height: "25rem" }}
+                />
+                <CardBody className="px-0 pb-4">
+                  <CardTitle tag="h5">{book.title} </CardTitle>
+                  <CardSubtitle tag="h6">{book.price}€</CardSubtitle>
+                  <div className="d-flex justify-content-start mt-2">
+                    <Button
+                      color="primary"
+                      size="sm"
+                      className="me-2"
+                      onClick={(e) => toggleModal(book)}
+                    >
+                      <FontAwesomeIcon icon={["fas", "info"]} size="lg" />
+                    </Button>
+                    {/* Render this modal on Desktop */}
+                    {window.screen.width > 1024 && (
+                      <DesktopModal
+                        isModalOpen={modal}
+                        toggle={toggleModal}
+                        modalBook={modalBook}
+                      />
+                    )}
+                    {/* Render this modal on Mobile devices */}
+                    {window.screen.width <= 1024 && (
+                      <MobileModal
+                        isModalOpen={modal}
+                        toggle={toggleModal}
+                        modalBook={modalBook}
+                      />
+                    )}
+                    <Button
+                      color="success"
+                      size="sm"
+                      onClick={() => dispatch(addBookToCart(book))}
+                    >
+                      <FontAwesomeIcon icon={["fas", "cart-plus"]} size="lg" />
+                    </Button>
+                  </div>
+                </CardBody>
+              </Card>
+            </Fade>
           ))}
         </CardGroup>
       </div>

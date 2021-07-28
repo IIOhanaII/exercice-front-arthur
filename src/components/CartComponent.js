@@ -3,6 +3,8 @@ import { Button } from "reactstrap";
 import { useSelector, useDispatch } from "react-redux";
 import { selectCart, deleteBookFromCart } from "../features/cart/cartSlice";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { Fade } from "react-animation-components";
+import { v4 as uuidv4 } from "uuid";
 
 const Cart = () => {
   const dispatch = useDispatch();
@@ -14,6 +16,42 @@ const Cart = () => {
   const [cartTotalValue, setCartTotalValue] = useState(null);
   const [discountedCartTotalValue, setDiscountedCartTotalValue] =
     useState(null);
+
+  const getBestOffer = (cartOffers) => {
+    let highestValueFromOffers = 0;
+
+    // Return directly the offer if there is only one applicable offer for the cart
+    if (cartOffers.offers.length === 1) {
+      highestValueFromOffers = cartOffers.offers[0].value;
+
+      return highestValueFromOffers;
+    } else {
+      const sliceOffer = cartOffers.offers.find(
+        (offer) => offer.type === "slice"
+      );
+
+      // Execute this only if an offer of type slice exists
+      if (sliceOffer) {
+        const numberOfSlicesComputedFromCartTotalValue = Math.floor(
+          cartTotalValue / sliceOffer.sliceValue
+        );
+
+        const totalValueOfSliceOffer =
+          sliceOffer.value * numberOfSlicesComputedFromCartTotalValue;
+
+        // Replace value of slice offer with its total value for comparison purpose
+        sliceOffer.value = totalValueOfSliceOffer;
+      }
+
+      // Get the highest value from offers by comparing their values
+      highestValueFromOffers = Math.max.apply(
+        Math,
+        cartOffers.offers.map((offer) => offer.value)
+      );
+
+      return highestValueFromOffers;
+    }
+  };
 
   const loadBestOffer = () => {
     // Chain each book isbn
@@ -28,11 +66,7 @@ const Cart = () => {
       .then(
         (result) => {
           console.log(result);
-          const highestValueFromOffers = Math.max.apply(
-            Math,
-            result.offers.map((offer) => offer.value)
-          );
-          setBestOffer(highestValueFromOffers);
+          setBestOffer(getBestOffer(result));
           setIsBestOfferLoaded(true);
         },
         (error) => {
@@ -89,49 +123,52 @@ const Cart = () => {
     return (
       <div className="container">
         {cart.map((book) => (
-          <div
-            key={book.isbn}
-            style={{
-              padding: "0",
-              height: "12rem",
-              display: "flex",
-            }}
-            className="mt-4"
-          >
-            <img
-              src={book.cover}
-              alt={`Couverture du livre intitulé ${book.title}`}
-              style={{ width: "8.16rem", height: "12rem" }}
-            />
+          <Fade in duration={500} timingFn="ease-in-out" key={uuidv4()}>
             <div
               style={{
+                padding: "0",
+                height: "12rem",
                 display: "flex",
-                flexDirection: "column",
-                justifyContent: "space-evenly",
               }}
-              className="ms-2"
+              className="mt-4"
             >
-              <h3 className="text-primary">{book.title}</h3>
-              <h4 className="text-secondary">{book.price}€</h4>
-              <h5 className="text-success">En stock</h5>
-              <div>
-                <Button
-                  color="danger"
-                  size="sm"
-                  onClick={() => handleOnDelete(book)}
-                >
-                  <FontAwesomeIcon icon={["fas", "trash-alt"]} size="lg" />
-                </Button>
+              <img
+                src={book.cover}
+                alt={`Couverture du livre intitulé ${book.title}`}
+                style={{ width: "8.16rem", height: "12rem" }}
+              />
+              <div
+                style={{
+                  display: "flex",
+                  flexDirection: "column",
+                  justifyContent: "space-evenly",
+                }}
+                className="ms-2"
+              >
+                <h3 className="text-primary">{book.title}</h3>
+                <h4 className="text-secondary">{book.price}€</h4>
+                <h5 className="text-success">En stock</h5>
+                <div>
+                  <Button
+                    color="danger"
+                    size="sm"
+                    onClick={() => handleOnDelete(book)}
+                  >
+                    <FontAwesomeIcon icon={["fas", "trash-alt"]} size="lg" />
+                  </Button>
+                </div>
               </div>
             </div>
-          </div>
+          </Fade>
         ))}
-        <div>Coût total de votre panier: {cartTotalValue}€</div>
-        <div>Avec notre meilleure offre commerciale de {bestOffer}€</div>
-        <div>
-          Le coût total de votre panier est désormais de{" "}
-          {discountedCartTotalValue}€
-        </div>
+        <Fade in duration={700} timingFn="ease-in-out">
+          <div>Coût total de votre panier: {cartTotalValue}€</div>
+          <div>Avec notre meilleure offre commerciale de {bestOffer}€</div>
+          <div>
+            Le coût total de votre panier est désormais de{" "}
+            {discountedCartTotalValue}€
+          </div>
+        </Fade>
       </div>
     );
   }
