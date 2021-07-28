@@ -2,7 +2,7 @@ import React from "react";
 import { Button, Modal, ModalBody, ModalHeader } from "reactstrap";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { useDispatch } from "react-redux";
-import { addBookToCart } from "../features/cart/cartSlice";
+import { addBookToCart } from "../features/cartSlice";
 
 export const MobileModal = ({ isModalOpen, toggle, modalBook }) => {
   const dispatch = useDispatch();
@@ -12,11 +12,11 @@ export const MobileModal = ({ isModalOpen, toggle, modalBook }) => {
     </Button>
   );
   return (
-    <Modal isOpen={isModalOpen} toggle={toggle} size="xs" centered scrollable>
+    <Modal isOpen={isModalOpen} toggle={toggle} centered scrollable>
       <ModalHeader toggle={toggle} close={closeBtn}>
         {modalBook.title}
       </ModalHeader>
-      <ModalBody style={{ padding: 0 }}>
+      <ModalBody className="p-0">
         <div className="d-flex flex-column">
           <img
             src={modalBook.cover}

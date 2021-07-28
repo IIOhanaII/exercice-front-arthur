@@ -9,7 +9,7 @@ import {
 } from "reactstrap";
 import { NavLink } from "react-router-dom";
 import { useSelector } from "react-redux";
-import { selectCart } from "../features/cart/cartSlice";
+import { selectCart } from "../features/cartSlice";
 
 const Header = () => {
   const cart = useSelector(selectCart);

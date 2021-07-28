@@ -2,7 +2,7 @@ import React from "react";
 import { Button, Modal, ModalBody } from "reactstrap";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { useDispatch } from "react-redux";
-import { addBookToCart } from "../features/cart/cartSlice";
+import { addBookToCart } from "../features/cartSlice";
 
 export const DesktopModal = ({ isModalOpen, toggle, modalBook }) => {
   const dispatch = useDispatch();
@@ -19,13 +19,7 @@ export const DesktopModal = ({ isModalOpen, toggle, modalBook }) => {
           alt={`Couverture du livre intitulé ${modalBook.title}`}
           className="img-sizing"
         />
-        <div
-          style={{
-            display: "flex",
-            flexDirection: "column",
-            padding: "1rem",
-          }}
-        >
+        <div className="p-3 d-flex flex-column">
           <div className="d-flex justify-content-between align-items-center">
             <h2 className="text-primary">{modalBook.title}</h2>
             <Button

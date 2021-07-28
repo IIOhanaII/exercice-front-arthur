@@ -7,9 +7,10 @@ import {
   CardImg,
   CardSubtitle,
   CardTitle,
+  Spinner,
 } from "reactstrap";
 import { useDispatch } from "react-redux";
-import { addBookToCart } from "../features/cart/cartSlice";
+import { addBookToCart } from "../features/cartSlice";
 import { ReactSearchAutocomplete } from "react-search-autocomplete";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { DesktopModal } from "./DesktopModalComponent";
@@ -19,6 +20,7 @@ import { v4 as uuidv4 } from "uuid";
 
 const Bookstore = () => {
   const dispatch = useDispatch();
+
   const [error, setError] = useState(false);
   const [areBooksLoaded, setAreBooksLoaded] = useState(false);
   const [books, setBooks] = useState([]);
@@ -91,20 +93,28 @@ const Bookstore = () => {
 
   if (error) {
     return (
-      <div>
+      <div className="mt-5 text-center">
         Un problème est survenu et nous en sommes désolés, veuillez bien s'il
         vous plaît rafraîchir la page ou revenir plus tard
       </div>
     );
   } else if (!areBooksLoaded) {
-    return <div>Chargement…</div>;
+    return (
+      <div className="mt-5 text-center">
+        <Spinner
+          style={{ animationDuration: "1.25s" }}
+          type="grow"
+          color="primary"
+        />
+      </div>
+    );
   } else {
     return (
       <div className="container">
+        {/* The searchbox */}
         <Fade in duration={500} timingFn="ease-in-out">
           <div
-            style={{ marginLeft: "auto", marginRight: "auto" }}
-            className="mt-4 searchbox-sizing"
+            className="mt-4 mx-auto searchbox-sizing"
             onBlur={(event) => handleOnBlur(event)}
           >
             <ReactSearchAutocomplete
@@ -123,6 +133,7 @@ const Bookstore = () => {
             />
           </div>
         </Fade>
+        {/* Display all the books */}
         <CardGroup className="mt-4">
           {filteredBooks.map((book) => (
             <Fade in duration={1000} timingFn="ease-in-out" key={uuidv4()}>

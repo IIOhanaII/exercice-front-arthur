@@ -14,7 +14,7 @@ export const cartSlice = createSlice({
         state.value = [...state.value, action.payload];
       }
     },
-    deleteBookFromCart: (state, action) => {
+    removeBookFromCart: (state, action) => {
       state.value = state.value.filter(
         (bookToKeep) => bookToKeep.isbn !== action.payload.isbn
       );
@@ -22,7 +22,7 @@ export const cartSlice = createSlice({
   },
 });
 
-export const { addBookToCart, deleteBookFromCart } = cartSlice.actions;
+export const { addBookToCart, removeBookFromCart } = cartSlice.actions;
 
 export const selectCart = (state) => state.cart.value;
 
