@@ -11,7 +11,7 @@ import { NavLink } from "react-router-dom";
 import { useSelector } from "react-redux";
 import { selectCart } from "../features/cartSlice";
 
-const Header = () => {
+export const Header = () => {
   const cart = useSelector(selectCart);
 
   const [isOpen, setIsOpen] = useState(false);
@@ -44,5 +44,3 @@ const Header = () => {
     </div>
   );
 };
-
-export default Header;

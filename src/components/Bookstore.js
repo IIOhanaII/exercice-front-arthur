@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from "react";
+import "./Bookstore.css";
 import {
   Button,
   CardGroup,
@@ -7,18 +8,18 @@ import {
   CardImg,
   CardSubtitle,
   CardTitle,
+  Container,
   Spinner,
 } from "reactstrap";
 import { useDispatch } from "react-redux";
 import { addBookToCart } from "../features/cartSlice";
 import { ReactSearchAutocomplete } from "react-search-autocomplete";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { DesktopModal } from "./DesktopModalComponent";
-import { MobileModal } from "./MobileModalComponent";
+import { BookModal } from "./BookModal";
 import { Fade } from "react-animation-components";
 import { v4 as uuidv4 } from "uuid";
 
-const Bookstore = () => {
+export const Bookstore = () => {
   const dispatch = useDispatch();
 
   const [error, setError] = useState(false);
@@ -33,6 +34,7 @@ const Bookstore = () => {
       .then((res) => res.json())
       .then(
         (result) => {
+          console.log(result);
           setAreBooksLoaded(true);
           // In order to use the search box from react-search-autocomplete package, it is necessary to add an id to each object of the result array
           // Indeed, this package does not offer the possibility to switch its filtering abilities from id to isbn in our case
@@ -110,11 +112,11 @@ const Bookstore = () => {
     );
   } else {
     return (
-      <div className="container">
+      <Container>
         {/* The searchbox */}
         <Fade in duration={500} timingFn="ease-in-out">
           <div
-            className="mt-4 mx-auto searchbox-sizing"
+            className="mt-4 mx-auto searchbox"
             onBlur={(event) => handleOnBlur(event)}
           >
             <ReactSearchAutocomplete
@@ -155,22 +157,11 @@ const Bookstore = () => {
                     >
                       <FontAwesomeIcon icon={["fas", "info"]} size="lg" />
                     </Button>
-                    {/* Render this modal on Desktop */}
-                    {window.screen.width > 1024 && (
-                      <DesktopModal
-                        isModalOpen={modal}
-                        toggle={toggleModal}
-                        modalBook={modalBook}
-                      />
-                    )}
-                    {/* Render this modal on Mobile devices */}
-                    {window.screen.width <= 1024 && (
-                      <MobileModal
-                        isModalOpen={modal}
-                        toggle={toggleModal}
-                        modalBook={modalBook}
-                      />
-                    )}
+                    <BookModal
+                      isModalOpen={modal}
+                      toggle={toggleModal}
+                      modalBook={modalBook}
+                    />
                     <Button
                       color="success"
                       size="sm"
@@ -184,9 +175,7 @@ const Bookstore = () => {
             </Fade>
           ))}
         </CardGroup>
-      </div>
+      </Container>
     );
   }
 };
-
-export default Bookstore;

@@ -1,6 +1,6 @@
-import React, { Component } from "react";
-import Main from "./components/MainComponent";
+import React from "react";
 import "./App.css";
+import { Main } from "./components/Main";
 import { BrowserRouter } from "react-router-dom";
 import { library } from "@fortawesome/fontawesome-svg-core";
 import { fas } from "@fortawesome/free-solid-svg-icons";
@@ -13,16 +13,12 @@ import {
 
 library.add(fas, faInfo, faCartPlus, faTrashAlt, faTimes);
 
-class App extends Component {
-  render() {
-    return (
-      <BrowserRouter>
-        <div className="App">
-          <Main />
-        </div>
-      </BrowserRouter>
-    );
-  }
-}
-
-export default App;
+export const App = () => {
+  return (
+    <BrowserRouter>
+      <div className="App">
+        <Main />
+      </div>
+    </BrowserRouter>
+  );
+};

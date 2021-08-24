@@ -1,0 +1,13 @@
+@media (min-width: 992px) {
+  .book-cover {
+    width: 17rem;
+    height: 25rem;
+  }
+}
+
+@media (max-width: 991px) {
+  .book-cover {
+    width: 8.16rem;
+    height: 12rem;
+  }
+}

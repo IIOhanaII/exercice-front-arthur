@@ -1,0 +1,23 @@
+@media (min-width: 500px) {
+  .searchbox {
+    width: 400px;
+  }
+}
+
+@media (max-width: 499px) {
+  .searchbox {
+    width: 250px;
+  }
+}
+
+@media (min-width: 280px) {
+  .card-group {
+    display: flex;
+    flex-flow: row wrap;
+    justify-content: center;
+  }
+
+  .card-group > .card {
+    flex: 0 0 auto;
+  }
+}
