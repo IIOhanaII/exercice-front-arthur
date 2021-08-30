@@ -16,13 +16,7 @@ export const BookModal = ({ isModalOpen, toggle, modalBook }) => {
     <React.Fragment>
       {/* On Desktop, render this modal */}
       {window.screen.width > 1024 && (
-        <Modal
-          isOpen={isModalOpen}
-          toggle={toggle}
-          size="xl"
-          centered
-          scrollable
-        >
+        <Modal isOpen={isModalOpen} toggle={toggle} size="xl" centered>
           <ModalBody
             style={{
               height: "25rem",
@@ -34,7 +28,13 @@ export const BookModal = ({ isModalOpen, toggle, modalBook }) => {
               alt={`Couverture du livre intitulé ${modalBook.title}`}
               className="book-cover"
             />
-            <div className="p-3 d-flex flex-column">
+            <div
+              className="p-3 d-flex flex-column"
+              style={{
+                overflowX: "hidden",
+                overflowY: "auto",
+              }}
+            >
               <div className="d-flex justify-content-between align-items-center">
                 <h2 className="text-primary">{modalBook.title}</h2>
                 <Button

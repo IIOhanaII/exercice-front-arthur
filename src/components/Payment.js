@@ -152,11 +152,7 @@ const CheckoutForm = () => {
     </div>
   ) : (
     <>
-      <h1 className="PaymentContainer__elements text-primary text-center my-3">
-        Paiement
-      </h1>
-
-      <form className="PaymentContainer__elements" onSubmit={handleSubmit}>
+      <form className="Form" onSubmit={handleSubmit}>
         <fieldset className="FormGroup">
           <div className="FormRow">
             <label htmlFor="name" className="FormRowLabel">

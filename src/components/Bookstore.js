@@ -1,27 +1,12 @@
 import React, { useState, useEffect } from "react";
 import "./Bookstore.css";
-import {
-  Button,
-  CardGroup,
-  Card,
-  CardBody,
-  CardImg,
-  CardSubtitle,
-  CardTitle,
-  Container,
-  Spinner,
-} from "reactstrap";
-import { useDispatch } from "react-redux";
-import { addBookToCart } from "../features/cartSlice";
+import { CardGroup, Container, Spinner } from "reactstrap";
 import { ReactSearchAutocomplete } from "react-search-autocomplete";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { BookModal } from "./BookModal";
+import { BookCard } from "./BookCard";
 import { Fade } from "react-animation-components";
 import { v4 as uuidv4 } from "uuid";
 
 export const Bookstore = () => {
-  const dispatch = useDispatch();
-
   const [error, setError] = useState(false);
   const [areBooksLoaded, setAreBooksLoaded] = useState(false);
   const [books, setBooks] = useState([]);
@@ -53,7 +38,7 @@ export const Bookstore = () => {
   };
 
   const handleOnSearch = (string, results) => {
-    if (results.length === 0) {
+    if (results.length === 0 || string.length <= 1) {
       setFilteredBooks(books);
     } else {
       setFilteredBooks(results);
@@ -73,7 +58,7 @@ export const Bookstore = () => {
     setFilteredBooks(books);
   };
 
-  // Allows to display all the books when the user clears the input box by erasing the search string and clicking outside the input box
+  // Makes sure to display all the books when the user clears the input box by erasing fast the search string and clicking outside the input box
   const handleOnBlur = (event) => {
     let input = document.getElementsByTagName("input")[0];
     if (
@@ -107,6 +92,7 @@ export const Bookstore = () => {
           style={{ animationDuration: "1.25s" }}
           type="grow"
           color="primary"
+          children=""
         />
       </div>
     );
@@ -114,64 +100,36 @@ export const Bookstore = () => {
     return (
       <Container>
         {/* The searchbox */}
-        <Fade in duration={500} timingFn="ease-in-out">
-          <div
-            className="mt-4 mx-auto searchbox"
-            onBlur={(event) => handleOnBlur(event)}
-          >
-            <ReactSearchAutocomplete
-              items={books}
-              onSearch={handleOnSearch}
-              onHover={handleOnHover}
-              onSelect={handleOnSelect}
-              onClear={handleOnClear}
-              autoFocus
-              fuseOptions={{
-                keys: ["title", "isbn"],
-              }}
-              resultStringKeyName="title"
-              placeholder="Titre, isbn"
-              styling={{ zIndex: "1000" }}
-            />
-          </div>
-        </Fade>
+        <div
+          className="mt-4 mx-auto searchbox"
+          onBlur={(event) => handleOnBlur(event)}
+        >
+          <ReactSearchAutocomplete
+            items={books}
+            onSearch={handleOnSearch}
+            onHover={handleOnHover}
+            onSelect={handleOnSelect}
+            onClear={handleOnClear}
+            autoFocus
+            fuseOptions={{
+              keys: ["title", "isbn"],
+              minMatchCharLength: 2,
+            }}
+            resultStringKeyName="title"
+            placeholder="Titre, isbn"
+            styling={{ zIndex: "1000" }}
+          />
+        </div>
         {/* Display all the books */}
         <CardGroup className="mt-4">
           {filteredBooks.map((book) => (
-            <Fade in duration={1000} timingFn="ease-in-out" key={uuidv4()}>
-              <Card style={{ width: "17rem" }} className="border-0 me-sm-4">
-                <CardImg
-                  src={book.cover}
-                  alt={`Couverture du livre intitulé ${book.title}`}
-                  style={{ height: "25rem" }}
-                />
-                <CardBody className="px-0 pb-4">
-                  <CardTitle tag="h5">{book.title} </CardTitle>
-                  <CardSubtitle tag="h6">{book.price}€</CardSubtitle>
-                  <div className="d-flex justify-content-start mt-2">
-                    <Button
-                      color="primary"
-                      size="sm"
-                      className="me-2"
-                      onClick={(e) => toggleModal(book)}
-                    >
-                      <FontAwesomeIcon icon={["fas", "info"]} size="lg" />
-                    </Button>
-                    <BookModal
-                      isModalOpen={modal}
-                      toggle={toggleModal}
-                      modalBook={modalBook}
-                    />
-                    <Button
-                      color="success"
-                      size="sm"
-                      onClick={() => dispatch(addBookToCart(book))}
-                    >
-                      <FontAwesomeIcon icon={["fas", "cart-plus"]} size="lg" />
-                    </Button>
-                  </div>
-                </CardBody>
-              </Card>
+            <Fade in duration={500} timingFn="ease-in-out" key={uuidv4()}>
+              <BookCard
+                book={book}
+                modal={modal}
+                toggleModal={toggleModal}
+                modalBook={modalBook}
+              />
             </Fade>
           ))}
         </CardGroup>

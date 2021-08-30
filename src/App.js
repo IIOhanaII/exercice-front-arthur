@@ -9,9 +9,23 @@ import {
   faCartPlus,
   faTrashAlt,
   faTimes,
+  faShoppingCart,
+  faCashRegister,
+  faCheck,
+  faBook,
 } from "@fortawesome/free-solid-svg-icons";
 
-library.add(fas, faInfo, faCartPlus, faTrashAlt, faTimes);
+library.add(
+  fas,
+  faInfo,
+  faCartPlus,
+  faTrashAlt,
+  faTimes,
+  faShoppingCart,
+  faCashRegister,
+  faCheck,
+  faBook
+);
 
 export const App = () => {
   return (

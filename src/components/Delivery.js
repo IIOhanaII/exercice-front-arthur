@@ -13,16 +13,15 @@ import {
 import { ErrorMessage } from "formik";
 import { useDispatch } from "react-redux";
 import { storeFormData } from "../features/deliverySlice";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 
 export const Delivery = () => {
   const dispatch = useDispatch();
   return (
     <Container>
-      <h1 className="text-primary text-center my-3">Votre commande</h1>
-
-      <h3 className="my-4 py-3 text-primary text-center">
+      <h4 className="my-4 text-primary text-center">
         Votre adresse de livraison
-      </h3>
+      </h4>
       <Formik
         initialValues={{
           firstName: "",
@@ -146,8 +145,15 @@ export const Delivery = () => {
             </FormGroup>
             <FormGroup row className="text-center my-3 my-sm-4">
               <Col>
-                <Button type="submit" style={{ backgroundColor: "#fb8500" }}>
-                  Valider
+                <Button
+                  className="me-5"
+                  style={{ backgroundColor: "#fb8500" }}
+                  href="/cart"
+                >
+                  <FontAwesomeIcon icon={["fas", "shopping-cart"]} size="lg" />
+                </Button>
+                <Button type="submit" color="success">
+                  <FontAwesomeIcon icon={["fas", "check"]} size="lg" />
                 </Button>
               </Col>
             </FormGroup>

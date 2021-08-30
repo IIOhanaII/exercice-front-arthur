@@ -1,6 +1,4 @@
-import {
-  computeCartTotalValue,
-} from "./cartUtilities";
+import { computeCartTotalValue } from "./cartUtilities";
 
 it("computes the cart total value", () => {
   const cart1 = [

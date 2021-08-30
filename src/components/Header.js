@@ -22,9 +22,15 @@ export const Header = () => {
   return (
     <div>
       <Navbar color="dark" dark expand="sm">
-        <NavbarBrand href="/bookstore" className="ms-3">
-          La bibliothèque d'Henri Potier
-        </NavbarBrand>
+        {window.screen.width > 360 ? (
+          <NavbarBrand href="/" className="ms-3">
+            La bibliothèque d'Henri Potier
+          </NavbarBrand>
+        ) : (
+          <NavbarBrand href="/" className="ms-3">
+            Henri Potier
+          </NavbarBrand>
+        )}
         <NavbarToggler onClick={toggle} />
         <Collapse isOpen={isOpen} navbar>
           <Nav navbar>

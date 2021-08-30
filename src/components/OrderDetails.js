@@ -4,6 +4,7 @@ import { useSelector } from "react-redux";
 import { selectCart } from "../features/cartSlice";
 import { selectDelivery } from "../features/deliverySlice";
 import { computeCartTotalValue } from "../utilities/cartUtilities";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 
 export const OrderDetails = () => {
   const cart = useSelector(selectCart);
@@ -17,13 +18,9 @@ export const OrderDetails = () => {
   const deliveryInformation = useSelector(selectDelivery);
   return (
     <Container>
-      <h1 className="text-primary text-center my-3">
-        Confirmation de votre commande
-      </h1>
+      <h3 className="text-primary text-center my-4">Votre commande</h3>
 
-      <h3 className="my-4 py-3 text-primary text-center">
-        Récapitulatif de vos achats
-      </h3>
+      <h4 className="mt-3 mb-2 text-primary text-center">Achats</h4>
       <Table responsive>
         <tbody>
           {booksInCart}
@@ -54,9 +51,9 @@ export const OrderDetails = () => {
           )}
         </tbody>
       </Table>
-      <h3 className="my-4 py-3 text-primary text-center">
-        Vos informations de livraison
-      </h3>
+      <h4 className="my-3 text-primary text-center">
+        Informations de livraison
+      </h4>
       <Table responsive>
         <tbody>
           <tr>
@@ -83,8 +80,15 @@ export const OrderDetails = () => {
         </tbody>
       </Table>
       <div className="text-center my-4">
-        <Button color="success" size="lg" className="me-4" href="/payment">
-          Confirmer ma commande
+        <Button
+          className="me-5"
+          style={{ backgroundColor: "#fb8500" }}
+          href="/cart"
+        >
+          <FontAwesomeIcon icon={["fas", "shopping-cart"]} size="lg" />
+        </Button>
+        <Button color="success" className="me-4" href="/payment">
+          <FontAwesomeIcon icon={["fas", "cash-register"]} size="lg" />
         </Button>
       </div>
     </Container>

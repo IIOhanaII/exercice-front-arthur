@@ -1,5 +1,6 @@
 import React from "react";
 import { Button, Container, Table } from "reactstrap";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { useSelector } from "react-redux";
 import { selectCart } from "../features/cartSlice";
 import { computeCartTotalValue } from "../utilities/cartUtilities";
@@ -15,12 +16,8 @@ export const Purchases = () => {
   const totalPrice = computeCartTotalValue(cart);
   return (
     <Container>
-      <h1 className="text-primary text-center my-3">Votre commande</h1>
-
-      <h3 className="my-4 py-3 text-primary text-center">
-        Récapitulatif de vos achats
-      </h3>
-      <Table responsive hover>
+      <h4 className="my-3 text-primary text-center">Vos achats</h4>
+      <Table responsive>
         <tbody>
           {booksInCart}
           {totalPrice >= 50 ? (
@@ -52,14 +49,18 @@ export const Purchases = () => {
       </Table>
 
       <div className="text-center my-4">
-        <Button color="primary" size="lg" className="me-4" href="/bookstore">
-          Reprendre mes achats
+        <Button color="primary" className="me-4" href="/bookstore">
+          <FontAwesomeIcon icon={["fas", "book"]} size="lg" />
         </Button>
-        <Button color="warning" size="lg" className="me-4" href="/cart">
-          Revenir au panier
+        <Button
+          style={{ backgroundColor: "#fb8500" }}
+          className="me-4 text-light"
+          href="/cart"
+        >
+          <FontAwesomeIcon icon={["fas", "shopping-cart"]} size="lg" />
         </Button>
-        <Button color="success" size="lg" className="me-4" href="/delivery">
-          Continuer ma commande
+        <Button color="success" className="me-4" href="/delivery">
+          <FontAwesomeIcon icon={["fas", "check"]} size="lg" />
         </Button>
       </div>
     </Container>

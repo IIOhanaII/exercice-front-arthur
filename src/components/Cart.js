@@ -66,16 +66,11 @@ export const Cart = () => {
             Total : {cartTotalValue}€
           </h3>
           <div className="text-center my-4">
-            <Button
-              color="primary"
-              size="lg"
-              className="me-4"
-              href="/bookstore"
-            >
-              Reprendre mes achats
+            <Button color="primary" className="me-4" href="/bookstore">
+              <FontAwesomeIcon icon={["fas", "book"]} size="lg" />
             </Button>
-            <Button color="success" size="lg" href="/purchases">
-              Commander
+            <Button color="success" href="/purchases">
+              <FontAwesomeIcon icon={["fas", "cash-register"]} size="lg" />
             </Button>
           </div>
         </Fade>
