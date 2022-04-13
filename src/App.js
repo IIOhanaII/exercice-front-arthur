@@ -13,6 +13,8 @@ import {
   faCashRegister,
   faCheck,
   faBook,
+  faMinus,
+  faPlus
 } from "@fortawesome/free-solid-svg-icons";
 
 library.add(
@@ -24,7 +26,9 @@ library.add(
   faShoppingCart,
   faCashRegister,
   faCheck,
-  faBook
+  faBook,
+  faMinus,
+  faPlus
 );
 
 export const App = () => {

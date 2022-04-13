@@ -1,2 +1,2 @@
 export const computeCartTotalValue = (cart) =>
-  cart.map((book) => book.price).reduce((a, b) => a + b, 0);
+  cart.map((book) => book.price * book.quantityInCart).reduce((a, b) => a + b, 0);

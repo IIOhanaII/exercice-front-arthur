@@ -1,17 +1,18 @@
 import React, { useState, useEffect } from "react";
+import { CartBook } from "./CartBook";
 import { Button, Container } from "reactstrap";
 import { useSelector, useDispatch } from "react-redux";
 import { selectCart, removeBookFromCart } from "../features/cartSlice";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { Fade } from "react-animation-components";
-import { v4 as uuidv4 } from "uuid";
 import { computeCartTotalValue } from "../utilities/cartUtilities";
+import { v4 as uuidv4 } from "uuid";
 
 export const Cart = () => {
   const dispatch = useDispatch();
   const cart = useSelector(selectCart);
 
-  const [cartTotalValue, setCartTotalValue] = useState(null);
+  const [cartTotalValue, setCartTotalValue] = useState(0);
 
   const handleOnDelete = (book) => {
     dispatch(removeBookFromCart(book));
@@ -36,29 +37,11 @@ export const Cart = () => {
       <Container>
         {/* Display all the books which have been added to the cart */}
         {cart.map((book) => (
-          <Fade in duration={500} timingFn="ease-in-out" key={uuidv4()}>
-            <div style={{ height: "12rem" }} className="d-flex p-0 mt-4">
-              <img
-                src={book.cover}
-                alt={`Couverture du livre intitulé ${book.title}`}
-                style={{ width: "8.16rem", height: "12rem" }}
-              />
-              <div className="d-flex flex-column justify-content-evenly ms-2">
-                <h3 className="text-primary">{book.title}</h3>
-                <h4 className="text-secondary">{book.price}€</h4>
-                <h5 className="text-success">En stock</h5>
-                <div>
-                  <Button
-                    color="danger"
-                    size="sm"
-                    onClick={() => handleOnDelete(book)}
-                  >
-                    <FontAwesomeIcon icon={["fas", "trash-alt"]} size="lg" />
-                  </Button>
-                </div>
-              </div>
-            </div>
-          </Fade>
+          <CartBook
+            book={book}
+            handleOnDelete={handleOnDelete}
+            key={uuidv4()}
+          />
         ))}
         {/* A table which displays the discounted cart total value */}
         <Fade in duration={700} timingFn="ease-in-out">

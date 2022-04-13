@@ -2,11 +2,23 @@ import React from "react";
 import "./BookModal.css";
 import { Button, Modal, ModalBody, ModalHeader } from "reactstrap";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { useDispatch } from "react-redux";
-import { addBookToCart } from "../features/cartSlice";
+import { useDispatch, useSelector } from "react-redux";
+import { selectCart, addBookToCart } from "../features/cartSlice";
 
 export const BookModal = ({ isModalOpen, toggle, modalBook }) => {
   const dispatch = useDispatch();
+  const cart = useSelector(selectCart);
+
+  let isBookInCart = cart.find((bookInCart) => bookInCart.isbn === modalBook.isbn);
+
+  const addToCart = () => {
+    if (isBookInCart) alert('Ce livre est déjà dans votre panier')
+    else {
+      let quantityInCart = 1;
+      dispatch(addBookToCart({ ...modalBook, quantityInCart }));
+    }
+  };
+
   const closeBtn = (
     <Button color="danger" size="sm" className="close" onClick={toggle}>
       <FontAwesomeIcon icon={["fas", "times"]} size="lg" />
@@ -41,7 +53,7 @@ export const BookModal = ({ isModalOpen, toggle, modalBook }) => {
                   color="success"
                   size="sm"
                   style={{ width: "39px", height: "31px" }}
-                  onClick={() => dispatch(addBookToCart(modalBook))}
+                  onClick={() => addToCart()}
                 >
                   <FontAwesomeIcon icon={["fas", "cart-plus"]} size="lg" />
                 </Button>

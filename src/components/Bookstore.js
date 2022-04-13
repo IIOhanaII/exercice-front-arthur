@@ -19,16 +19,18 @@ export const Bookstore = () => {
       .then((res) => res.json())
       .then(
         (result) => {
-          console.log(result);
           setAreBooksLoaded(true);
           // In order to use the search box from react-search-autocomplete package, it is necessary to add an id to each object of the result array
           // Indeed, this package does not offer the possibility to switch its filtering abilities from id to isbn in our case
-          const resultWithIds = result.map((book) => ({
+          // Books quantities in stock are added as well
+          const resultWithNewProperties = result.map((book) => ({
             ...book,
             id: book.isbn,
+            quantity: 10,
           }));
-          setBooks(resultWithIds);
-          setFilteredBooks(resultWithIds);
+          setBooks(resultWithNewProperties);
+          setFilteredBooks(resultWithNewProperties);
+          console.log(resultWithNewProperties);
         },
         (error) => {
           setAreBooksLoaded(true);
